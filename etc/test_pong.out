@@ -1,0 +1,24 @@
+bin/test_pong
+ping sw1down01 10 packets transmitted, 10
+ping sw1isup01 10 packets transmitted, 10
+ping sw2down01 10 packets transmitted, 10
+ping sw2isup01 10 packets transmitted, 10
+ping sw1down02 10 packets transmitted, 9
+ping sw1isup02 10 packets transmitted, 10
+ping sw2down02 10 packets transmitted, 10
+ping sw2isup02 10 packets transmitted, 10
+ping sw1down03 10 packets transmitted, 10
+ping sw1isup03 10 packets transmitted, 10
+ping sw2down03 10 packets transmitted, 10
+ping sw2isup03 10 packets transmitted, 10
+ping sw1down04 10 packets transmitted, 10
+ping sw1isup04 10 packets transmitted, 10
+ping sw2down04 10 packets transmitted, 10
+ping sw2isup04 10 packets transmitted, 10
+ping sw1down05 10 packets transmitted, 10
+ping sw1isup05 10 packets transmitted, 10
+ping sw2down05 10 packets transmitted, 10
+ping sw2isup05 10 packets transmitted, 10
+ping sw1down06 10 packets transmitted, 10
+ping sw1isup06 10 packets transmitted, 10
+ping sw2down06 10 packets transmitted, 8
