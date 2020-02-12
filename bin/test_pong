@@ -1,0 +1,44 @@
+#!/bin/bash
+
+source bin/stack_functions
+
+preamble_setup
+
+faucet_log=inst/forch-faucet-1/faucet.log
+forch_log=inst/forch-faucet-1/forch.log
+
+#################################################################################
+
+function simple_ping {
+    label=$1
+    ping=`docker exec forch-faux-1 ping -q -c 10 192.168.1.0 | fgrep packets`
+    echo Base ping results $ping
+    ping=${ping%received,*}
+    pingc=`echo $ping | sed -e 's/, time.*//'`
+    echo ping $label $pingc | tee -a $TEST_RESULTS
+    sleep 2
+}
+
+rm -f $faucet_log inst/forch-faucet-1/ofchannel.log
+tail -F $faucet_log &
+
+for iter in {1..20}; do
+    echo Starting iteration $iter
+    sudo ip link set t1sw1-eth28 down
+    echo ping sw1down `date`
+    simple_ping sw2isup01
+
+    sudo ip link set t1sw1-eth28 up
+    echo ping sw1isup `date`
+    simple_ping sw2isup01
+
+    sudo ip link set t1sw2-eth28 down
+    echo ping sw2down `date`
+    simple_ping sw2down02
+
+    sudo ip link set t1sw2-eth28 up
+    echo ping sw2isup `date`
+    simple_ping sw2isup01
+done
+
+echo Done with test_pong. | tee -a $TEST_RESULTS
