@@ -17,9 +17,9 @@ function simple_ping {
     label=$1
     ping=`docker exec forch-faux-1 ping -q -c 10 192.168.1.0 | fgrep packets`
     echo Base ping results $ping
+    ping=${ping#*transmitted,}
     ping=${ping%received,*}
-    pingc=`echo $ping | sed -e 's/, time.*//'`
-    echo ping $label $pingc | tee -a $TEST_RESULTS
+    echo ping $label $((ping >= 7)) | tee -a $TEST_RESULTS
 }
 
 rm -f $faucet_log inst/forch-faucet-1/ofchannel.log
