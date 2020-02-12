@@ -1,24 +1,82 @@
 bin/test_pong
-ping sw1down01 10 packets transmitted, 10
-ping sw1isup01 10 packets transmitted, 10
-ping sw2down01 10 packets transmitted, 10
-ping sw2isup01 10 packets transmitted, 10
-ping sw1down02 10 packets transmitted, 9
-ping sw1isup02 10 packets transmitted, 10
-ping sw2down02 10 packets transmitted, 10
-ping sw2isup02 10 packets transmitted, 10
-ping sw1down03 10 packets transmitted, 10
-ping sw1isup03 10 packets transmitted, 10
-ping sw2down03 10 packets transmitted, 10
-ping sw2isup03 10 packets transmitted, 10
-ping sw1down04 10 packets transmitted, 10
-ping sw1isup04 10 packets transmitted, 10
-ping sw2down04 10 packets transmitted, 10
-ping sw2isup04 10 packets transmitted, 10
-ping sw1down05 10 packets transmitted, 10
-ping sw1isup05 10 packets transmitted, 10
-ping sw2down05 10 packets transmitted, 10
-ping sw2isup05 10 packets transmitted, 10
-ping sw1down06 10 packets transmitted, 10
-ping sw1isup06 10 packets transmitted, 10
-ping sw2down06 10 packets transmitted, 8
+ping sw1down01 1
+ping sw1isup01 1
+ping sw2down01 1
+ping sw2isup01 1
+ping sw1down02 1
+ping sw1isup02 1
+ping sw2down02 1
+ping sw2isup02 1
+ping sw1down03 1
+ping sw1isup03 1
+ping sw2down03 1
+ping sw2isup03 1
+ping sw1down04 1
+ping sw1isup04 1
+ping sw2down04 1
+ping sw2isup04 1
+ping sw1down05 1
+ping sw1isup05 1
+ping sw2down05 1
+ping sw2isup05 1
+ping sw1down06 1
+ping sw1isup06 1
+ping sw2down06 1
+ping sw2isup06 1
+ping sw1down07 1
+ping sw1isup07 1
+ping sw2down07 1
+ping sw2isup07 1
+ping sw1down08 1
+ping sw1isup08 1
+ping sw2down08 1
+ping sw2isup08 1
+ping sw1down09 1
+ping sw1isup09 1
+ping sw2down09 1
+ping sw2isup09 1
+ping sw1down10 1
+ping sw1isup10 1
+ping sw2down10 1
+ping sw2isup10 1
+ping sw1down11 1
+ping sw1isup11 1
+ping sw2down11 1
+ping sw2isup11 1
+ping sw1down12 1
+ping sw1isup12 1
+ping sw2down12 1
+ping sw2isup12 1
+ping sw1down13 1
+ping sw1isup13 1
+ping sw2down13 1
+ping sw2isup13 1
+ping sw1down14 1
+ping sw1isup14 1
+ping sw2down14 1
+ping sw2isup14 1
+ping sw1down15 1
+ping sw1isup15 1
+ping sw2down15 1
+ping sw2isup15 1
+ping sw1down16 1
+ping sw1isup16 1
+ping sw2down16 1
+ping sw2isup16 1
+ping sw1down17 1
+ping sw1isup17 1
+ping sw2down17 1
+ping sw2isup17 1
+ping sw1down18 1
+ping sw1isup18 1
+ping sw2down18 1
+ping sw2isup18 1
+ping sw1down19 1
+ping sw1isup19 1
+ping sw2down19 1
+ping sw2isup19 1
+ping sw1down20 1
+ping sw1isup20 1
+ping sw2down20 1
+ping sw2isup20 1
+Done with test_pong.
