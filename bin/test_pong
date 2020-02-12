@@ -10,35 +10,37 @@ forch_log=inst/forch-faucet-1/forch.log
 #################################################################################
 
 function simple_ping {
+    sleep 20
+    echo
+    echo
+    echo ping $label `date`
     label=$1
     ping=`docker exec forch-faux-1 ping -q -c 10 192.168.1.0 | fgrep packets`
     echo Base ping results $ping
     ping=${ping%received,*}
     pingc=`echo $ping | sed -e 's/, time.*//'`
     echo ping $label $pingc | tee -a $TEST_RESULTS
-    sleep 2
 }
 
 rm -f $faucet_log inst/forch-faucet-1/ofchannel.log
 tail -F $faucet_log &
 
-for iter in {1..20}; do
+for iter in {01..20}; do
     echo Starting iteration $iter
+
     sudo ip link set t1sw1-eth28 down
-    echo ping sw1down `date`
-    simple_ping sw2isup01
+    simple_ping sw1down$iter
 
     sudo ip link set t1sw1-eth28 up
-    echo ping sw1isup `date`
-    simple_ping sw2isup01
+    simple_ping sw1isup$iter
 
     sudo ip link set t1sw2-eth28 down
-    echo ping sw2down `date`
-    simple_ping sw2down02
+    simple_ping sw2down$iter
 
     sudo ip link set t1sw2-eth28 up
-    echo ping sw2isup `date`
-    simple_ping sw2isup01
+    simple_ping sw2isup$iter
 done
+
+fgrep "Cold start" inst/forch-faucet-1/faucet.log | sort -n
 
 echo Done with test_pong. | tee -a $TEST_RESULTS
