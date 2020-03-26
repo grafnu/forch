@@ -24,5 +24,6 @@ process:
   connections:
     6001:
       description: Faucet openflow port
+      send_queue_limit: 15000
 event_client:
   stack_topo_change_coalesce_sec: 15

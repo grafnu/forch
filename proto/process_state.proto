@@ -119,7 +119,7 @@ message ProcessState {
   message ConnectionInfo {
     // Process entry
     string process_entry = 1;
-    
+
     // Foreign addresses
     map<string, ForeignAddress>  foreign_addresses = 2;
   }
@@ -130,5 +130,8 @@ message ProcessState {
   message ForeignAddress {
     // Established time
     string established = 1;
+
+    // Current send queue size
+    int32 send_queue_size = 2;
   }
 }

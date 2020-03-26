@@ -193,9 +193,16 @@ class LocalStateCollector:
             str(port): self._extract_conn(connections, port) for port in self._connections
         }
         conn_list = []
-        for port_info in connection_info['local_ports'].values():
+        for port in self._connections:
+            port_info = connection_info['local_ports'][str(port)]
             for foreign_address in port_info['foreign_addresses']:
                 conn_list.append(foreign_address)
+                send_queue_limit = self._connections[port].send_queue_limit
+                send_queue_size = connections[foreign_address]
+                print('TAP', send_queue_size, send_queue_limit)
+                if send_queue_limit and send_queue_size > send_queue_limit:
+                    LOGGER.error('Connection exceeded queue limit size')
+                    
         conn_list.sort()
         conn_state = str(conn_list)
         if conn_state != self._conn_state:
@@ -214,12 +221,14 @@ class LocalStateCollector:
                 if 'ESTABLISHED' in line:
                     try:
                         parts = line.split()
+                        send_queue_size = int(parts[2])
                         local_address = parts[3]
                         local_parts = local_address.split(':')
                         local_port = int(local_parts[-1])
                         foreign_address = parts[4]
                         connections[foreign_address] = {
                             'local_port': local_port,
+                            'send_queue_size': send_queue_size,
                             'process_info': parts[6]
                         }
                     except Exception as e:

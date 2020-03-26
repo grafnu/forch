@@ -134,8 +134,11 @@ message ProcessConfig {
 
   // Connection
   message Connection {
-    // description
+    // description of this connection
     string description = 1;
+
+    // send queue limit, to reap dead connections
+    string send_queue_limit = 2;
   }
 }
 
