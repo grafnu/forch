@@ -2,10 +2,12 @@
 
 env
 
+cp /faucet-src/etc/faucet/ryu.conf /etc/faucet/
+
 # User might already exist if docker restarted.
 echo "kronkiteman::$USERID:$USERID::/:bin/bash" >> /etc/passwd
 
-sudo -u kronkiteman \
+sudo -u kronkiteman --ryu-config-file=/etc/faucet/ryu.conf \
      FAUCET_EVENT_SOCK=$FAUCET_EVENT_SOCK \
      FAUCET_EVENT_SOCK_HEARTBEAT=$FAUCET_EVENT_SOCK_HEARTBEAT \
      FAUCET_CONFIG_STAT_RELOAD=$FAUCET_CONFIG_STAT_RELOAD \
