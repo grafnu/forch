@@ -980,7 +980,7 @@ class FaucetStateCollector:
                 self._stack_state_update = self._stack_state_event
             self._stack_state_data = (timestamp, link_graph, stack_root, dps)
             link_change_count = self.topo_state.get(LINKS_CHANGE_COUNT, 0)
-            LOGGER.warning('stack_state_links update save #d: %s',
+            LOGGER.warning('stack_state_links update save #%d: %s',
                            link_change_count, self._stack_state_data)
             return
 
