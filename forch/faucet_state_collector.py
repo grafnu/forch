@@ -139,8 +139,9 @@ class FaucetStateCollector:
         event_delta = time_now - self._stack_state_event
         update_delta = time_now - self._stack_state_update
         if event_delta > self._change_coalesce_sec or update_delta > self._change_coalesce_sec * 2:
-            LOGGER.warning('stack_state_links update apply %ds: %s',
-                           update_delta, self._stack_state_data)
+            link_change_count = self.topo_state.get(LINKS_CHANGE_COUNT, 0)
+            LOGGER.warning('stack_state_links update apply #%d %ds: %s',
+                           link_change_count, update_delta, self._stack_state_data)
             self._stack_state_update = 0
             state_data, self._stack_state_data = (self._stack_state_data, None)
             self._update_stack_topo_state_raw(*state_data)
@@ -978,7 +979,9 @@ class FaucetStateCollector:
             if not self._stack_state_update:
                 self._stack_state_update = self._stack_state_event
             self._stack_state_data = (timestamp, link_graph, stack_root, dps)
-            LOGGER.warning('stack_state_links update save: %s', self._stack_state_data)
+            link_change_count = self.topo_state.get(LINKS_CHANGE_COUNT, 0)
+            LOGGER.warning('stack_state_links update save #%d: %s',
+                           link_change_count, self._stack_state_data)
             return
 
         self._update_stack_topo_state_raw(timestamp, link_graph, stack_root, dps)
