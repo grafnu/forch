@@ -978,7 +978,7 @@ class FaucetStateCollector:
             if not self._stack_state_update:
                 self._stack_state_update = self._stack_state_event
             self._stack_state_data = (timestamp, link_graph, stack_root, dps)
-            LOGGER.warning('stack_state_links update save')
+            LOGGER.warning('stack_state_links update save: %s', self._stack_state_data)
             return
 
         self._update_stack_topo_state_raw(timestamp, link_graph, stack_root, dps)
