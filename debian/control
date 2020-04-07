@@ -5,7 +5,6 @@ Maintainer: Faucet Maintainers <maintainers@faucet.nz>
 Build-Depends: debhelper (>= 9),
 	       dh-python,
                python3-all (>= 3.7), python3-all (<< 3.8),
-	       python3-setuptools,
 	       python3-yaml,
 	       python3-prometheus-client,
 	       python3-requests,
@@ -15,7 +14,7 @@ Build-Depends: debhelper (>= 9),
 	       pylint,
 	       python3-pbr (>= 1.9),
 Standards-Version: 3.9.6
-X-Python3-Version: >= 3.6
+X-Python3-Version: >= 3.7
 Homepage: https://github.com/faucetsdn/forch
 Vcs-Git: https://github.com/faucetsdn/forch.git
 Vcs-Browser: https://github.com/faucetsdn/forch
