@@ -1,4 +1,4 @@
-dist: focal
+dist: eoan
 sudo: required
 language: python
 python:
