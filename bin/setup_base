@@ -18,7 +18,7 @@ if ! which $PYTHON; then
 fi
 
 sudo apt-get install openvswitch-switch protobuf-compiler \
-     python3-venv $PYTHON-dev jq docker-ce
+     python3-venv $PYTHON-dev jq docker-ce python3-setuptools
 
 if [ -z "$VIRTUAL_ENV" ]; then
     $PYTHON -m venv venv
