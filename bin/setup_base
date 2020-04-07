@@ -9,6 +9,14 @@ PYTHON=python3.7
 lsb_release -a
 uname -a
 
+if ! which $PYTHON; then
+    echo $PYTHON not found, attempting install...
+    sudo apt install software-properties-common
+    sudo add-apt-repository ppa:deadsnakes/ppa
+    sudo apt install $PYTHON
+    which $PYTHON
+fi
+
 sudo apt-get install openvswitch-switch protobuf-compiler \
      $PYTHON-venv $PYTHON-dev jq docker-ce
 
