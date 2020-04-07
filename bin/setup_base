@@ -4,17 +4,16 @@ ROOT=$(realpath $(dirname $0)/..)
 cd $ROOT
 
 GO_VERSION=1.13.3
-PVERSION=3.7
-PBASE=python$PVERSION
+PYTHON=python3.7
 
 lsb_release -a
 uname -a
 
 sudo apt-get install openvswitch-switch protobuf-compiler \
-     $PBASE-venv $PBASE-dev jq docker-ce
+     $PYTHON-venv $PYTHON-dev jq docker-ce
 
 if [ -z "$VIRTUAL_ENV" ]; then
-    $PBASE -m venv venv
+    $PYTHON -m venv venv
     source venv/bin/activate
 fi
 

@@ -4,6 +4,8 @@ testing=
 rm -rf dist/
 FAUCET_VERSION=$(cat etc/FAUCET_VERSION)
 
+PYTHON=python3.7
+
 if [ "$1" == testing ]; then
     echo Actual version is `git describe --dirty`
     testing=$1
@@ -26,7 +28,7 @@ echo Packaging version $version
 sudo apt-get install devscripts equivs
 
 # Build pip package
-python3 setup.py sdist bdist_wheel
+$PYTHON setup.py sdist bdist_wheel
 
 # Build debian package
 sudo mk-build-deps -i -r -t 'apt-get -f -y'
@@ -43,5 +45,5 @@ echo Created version $version '(from most recent annotated tag)'
 
 if [ -n "$testing" ]; then
     echo Checking contents of generated debian package...
-    dpkg -c dist/python3-forch_0.0.0-dirty_all.deb | fgrep forch/http_server.py
+    dpkg -c dist/$PYTHON-forch_0.0.0-dirty_all.deb | fgrep forch/http_server.py
 fi

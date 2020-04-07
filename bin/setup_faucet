@@ -3,6 +3,8 @@
 ROOT=$(realpath $(dirname $0)/..)
 cd $ROOT
 
+PYTHON=python3.7
+
 if [ -n "$TRAVIS_BRANCH" ]; then
     GIT_BRANCH=$TRAVIS_BRANCH
 else
@@ -25,11 +27,11 @@ FAUCET_REPO=$GIT_PEER
 FAUCET_VERSION=$(cat etc/FAUCET_VERSION)
 
 if [ -z "$VIRTUAL_ENV" ]; then
-    python3 -m venv venv
+    $PYTHON -m venv venv
     source venv/bin/activate
 fi
 
-SITE_PACKAGES_PATH=$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
+SITE_PACKAGES_PATH=$($PYTHON -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
 rm -f $SITE_PACKAGES_PATH/faucet
 ln -s $ROOT/faucet/faucet $SITE_PACKAGES_PATH/faucet
 
