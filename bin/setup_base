@@ -5,6 +5,9 @@ cd $ROOT
 
 GO_VERSION=1.13.3
 
+lsb_release -a
+uname -a
+
 sudo apt-get install openvswitch-switch protobuf-compiler \
      python3-venv python3-dev jq docker-ce
 
