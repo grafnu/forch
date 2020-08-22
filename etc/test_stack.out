@@ -394,7 +394,7 @@ null
 "http://127.0.0.1:9019/?list_hosts?eth_src=9a:02:57:1e:8f:01"
 "http://127.0.0.1:9019/?host_path?eth_src=9a:02:57:1e:8f:01&eth_dst=9a:02:57:1e:8f:02"
 @host_path-orphaned
-"nz-kiwi-t1sw1"
+"nz-kiwi-t1sw2"
 10
 null
 null
