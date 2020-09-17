@@ -239,11 +239,11 @@ function test_stack {
     bcount2e=$(tcpdump -en -r $t1sw2p28_pcap ether broadcast| wc -l) 2>/dev/null
     bcount1h=$(tcpdump -en -r $t2sw1p1_pcap ether broadcast | wc -l) 2>/dev/null
     bcount2h=$(tcpdump -en -r $t2sw2p1_pcap ether broadcast | wc -l) 2>/dev/null
-    echo $desc pcap bcount $bcount1e $bcount2e $bcound1h $bcound2h
+    echo $desc pcap bcount $bcount1e $bcount2e $bcount1h $bcount2h
     echo pcap bcast $(comp $bcount1e 4) $(comp $bcount2e 0) \
          $(comp $bcount1h 4) $(comp $bcount2h 4) | tee -a $TEST_RESULTS
     echo TAP TAP
-    tcpdump -en -r $t2sw1p1_pcap ether broadcast
+    tcpdump -en -r $t2sw1p1_pcap ether broadcast 2>&1
     echo TAP TAP
     
     telnet50=$(tcpdump -en -r $t2sw1p50_pcap vlan and port 23 | wc -l) 2>/dev/null
