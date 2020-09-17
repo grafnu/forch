@@ -1,0 +1,108 @@
+#!/bin/bash 
+
+bin/setup_stack local dhcp
+sudo ip link set t1sw1-eth9 down
+sudo ip link set t1sw2-eth10 down
+sudo ip addr add 240.0.0.1/24 dev lo
+sudo ip link set t1sw2-eth28 down 
+sudo ip link set t1sw1-eth6 down 
+sudo ip link set t1sw1-eth11 down
+
+desc=stack-broken
+TEST_RESULTS=/tmp/test_results
+OUT_DIR=/tmp/
+TCPSUDO="sudo tcpdump"
+cap_length=80
+ping_count=10
+echo Starting $desc test... | tee -a $TEST_RESULTS
+
+function comp {
+    echo $((($1 - $2 > 0) - ($1 - $2 < 0)))
+}
+
+function test_pair {
+    src=$1
+    dst=$2
+
+    host=forch-faux-$src
+    out_file=$nodes_dir/$host-$dst
+    cmd="ping -c $ping_count 192.168.1.$dst"
+    echo $host: $cmd
+    echo -n $host: $cmd\ > $out_file
+    docker exec $host $cmd | fgrep time= | wc -l >> $out_file 2>/dev/null &
+}
+
+desc_dir=$OUT_DIR/$desc
+t1sw1p6_pcap=$desc_dir/t1sw1-eth6.pcap
+t1sw1p28_pcap=$desc_dir/t1sw1-eth28.pcap
+t1sw2p28_pcap=$desc_dir/t1sw2-eth28.pcap
+t2sw1p1_pcap=$desc_dir/t2sw1-eth1.pcap
+t2sw1p50_pcap=$desc_dir/t2sw1-eth50.pcap
+t2sw1p52_pcap=$desc_dir/t2sw1-eth52.pcap
+t2sw2p1_pcap=$desc_dir/t2sw2-eth1.pcap
+nodes_dir=$desc_dir/nodes
+
+rm -rf $nodes_dir
+mkdir -p $nodes_dir
+
+echo $desc Capturing pcaps for $cap_length seconds...
+timeout $cap_length $TCPSUDO -eni t1sw1-eth6 -w $t1sw1p6_pcap &
+timeout $cap_length $TCPSUDO -Q out -eni t1sw1-eth28 -w $t1sw1p28_pcap &
+timeout $cap_length $TCPSUDO -Q out -eni t1sw2-eth28 -w $t1sw2p28_pcap &
+timeout $cap_length $TCPSUDO -Q out -eni faux-1 & # -w $t2sw1p1_pcap &
+timeout $cap_length $TCPSUDO -eni t2sw1-eth50 -w $t2sw1p50_pcap &
+timeout $cap_length $TCPSUDO -eni t2sw1-eth52 -w $t2sw1p52_pcap &
+timeout $cap_length $TCPSUDO -Q out -eni faux-2 -w $t2sw2p1_pcap &
+sleep 5
+
+echo $desc Simple tests...
+for from in 0 1 2 3; do
+for to in 0 1 2 3; do
+if [ $from != $to ]; then
+docker exec forch-faux-$from sh -c "arp -d 192.168.1.$to; ping -c 1 192.168.1.$to"
+fi
+done
+done
+
+echo $desc Pair tests...
+for from in 0 1 2 3; do
+for to in 0 1 2 3; do
+if [ $from != $to ]; then
+test_pair $from $to
+fi
+done
+done
+
+echo $desc Starting TCP probes...
+docker exec forch-faux-0 nc -w 1 192.168.1.1 23 2>&1 | tee -a $TEST_RESULTS
+docker exec forch-faux-0 nc -w 1 192.168.1.1 443 2>&1 | tee -a $TEST_RESULTS
+
+echo $desc Waiting for port capture to complete...
+sleep $cap_length
+sudo chown -R $USER $desc_dir
+
+bcount6=$(tcpdump -en -r $t1sw1p6_pcap | wc -l) 2>/dev/null
+bcount50=$(tcpdump -en -r $t2sw1p50_pcap | wc -l) 2>/dev/null
+bcount52=$(tcpdump -en -r $t2sw1p52_pcap | wc -l) 2>/dev/null
+bcount_total=$((bcount50 + bcount52))
+echo $desc pcap count is $bcount6 $bcount50 $bcount52 $bcount_total
+echo pcap sane $((bcount6 > 0)) $((bcount6 < 180)) \
+    $((bcount_total > 100)) $((bcount_total < 220)) | tee -a $TEST_RESULTS
+
+bcount1e=$(tcpdump -en -r $t1sw1p28_pcap ether broadcast| wc -l) 2>/dev/null
+bcount2e=$(tcpdump -en -r $t1sw2p28_pcap ether broadcast| wc -l) 2>/dev/null
+bcount1h=$(tcpdump -en -r $t2sw1p1_pcap ether broadcast | wc -l) 2>/dev/null
+bcount2h=$(tcpdump -en -r $t2sw2p1_pcap ether broadcast | wc -l) 2>/dev/null
+echo $t1sw1p28_pcap $bcount1e $t1sw2p28_pcap $bcount2e $t2sw1p1_pcap $bcount1h $t2sw2p1_pcap $bcount2h
+echo pcap bcast $(comp $bcount1e 4) $(comp $bcount2e 0) \
+    $(comp $bcount1h 4) $(comp $bcount2h 4) | tee -a $TEST_RESULTS
+
+telnet50=$(tcpdump -en -r $t2sw1p50_pcap vlan and port 23 | wc -l) 2>/dev/null
+https50=$(tcpdump -en -r $t2sw1p50_pcap vlan and port 443 | wc -l) 2>/dev/null
+telnet52=$(tcpdump -en -r $t2sw1p52_pcap vlan and port 23 | wc -l) 2>/dev/null
+https52=$(tcpdump -en -r $t2sw1p52_pcap vlan and port 443 | wc -l) 2>/dev/null
+echo telnet $((telnet50 + telnet52)) https $((https50 + https52)) | tee -a $TEST_RESULTS
+
+cat $nodes_dir/* | tee -a $TEST_RESULTS
+
+echo Done with $desc test. | tee -a $TEST_RESULTS
