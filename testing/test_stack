@@ -116,6 +116,8 @@ sudo ip link set t1sw1-eth6 down
 sudo ip link set t1sw1-eth11 down
 test_stack -broken
 
+ip link | fgrep sw
+
 exit 0
 
 test_forch -broken
