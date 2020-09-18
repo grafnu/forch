@@ -242,10 +242,7 @@ function test_stack {
     echo $desc pcap bcount $bcount1e $bcount2e $bcount1h $bcount2h
     echo pcap bcast $(comp $bcount1e 4) $(comp $bcount2e 0) \
          $(comp $bcount1h 4) $(comp $bcount2h 4) | tee -a $TEST_RESULTS
-    echo TAP TAP
-    tcpdump -en -r $t2sw1p1_pcap ether broadcast 2>&1
-    echo TAP TAP
-    
+
     telnet50=$(tcpdump -en -r $t2sw1p50_pcap vlan and port 23 | wc -l) 2>/dev/null
     https50=$(tcpdump -en -r $t2sw1p50_pcap vlan and port 443 | wc -l) 2>/dev/null
     telnet52=$(tcpdump -en -r $t2sw1p52_pcap vlan and port 23 | wc -l) 2>/dev/null
