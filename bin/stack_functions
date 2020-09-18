@@ -193,7 +193,7 @@ function test_stack {
 
     echo $desc Capturing pcaps for $cap_length seconds...
     echo TAP-$desc
-    tcpsudo="sudo timeout $cap_length tcpdump -Z root"
+    tcpsudo="sudo timeout $cap_length tcpdump --immediate-mode -Z root"
     $tcpsudo -eni t1sw1-eth6 -w $t1sw1p6_pcap &
     $tcpsudo -eni t1sw1-eth6 | sed -e 's/^/t1sw1p6: /' &
     $tcpsudo -Q out -eni t1sw1-eth28 -w $t1sw1p28_pcap &
