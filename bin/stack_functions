@@ -192,14 +192,11 @@ function test_stack {
     mkdir -p $nodes_dir
 
     echo $desc Capturing pcaps for $cap_length seconds...
-    echo TAP-$desc
     tcpsudo="sudo timeout $cap_length tcpdump --immediate-mode -Z root"
     $tcpsudo -eni t1sw1-eth6 -w $t1sw1p6_pcap &
-    $tcpsudo -eni t1sw1-eth6 | sed -e 's/^/t1sw1p6: /' &
     $tcpsudo -Q out -eni t1sw1-eth28 -w $t1sw1p28_pcap &
     $tcpsudo -Q out -eni t1sw2-eth28 -w $t1sw2p28_pcap &
     $tcpsudo -Q out -eni faux-1 -w $t2sw1p1_pcap &
-    $tcpsudo -Q out -eni faux-1 | sed -e 's/^/t2sw1p1: /' &
     $tcpsudo -eni t2sw1-eth50 -w $t2sw1p50_pcap &
     $tcpsudo -eni t2sw1-eth52 -w $t2sw1p52_pcap &
     $tcpsudo -Q out -eni faux-2 -w $t2sw2p1_pcap &
