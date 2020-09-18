@@ -115,11 +115,6 @@ sudo ip link set t1sw2-eth28 down
 sudo ip link set t1sw1-eth6 down
 sudo ip link set t1sw1-eth11 down
 test_stack -broken
-
-ip link | fgrep sw
-
-exit 0
-
 test_forch -broken
 
 echo %%% cpn t2sw2 down, t1sw1:10 down, t1sw2:10 up, t1sw1:6 up, t2sw3 swapped | tee -a $TEST_RESULTS
