@@ -229,13 +229,13 @@ function test_stack {
     sleep $cap_length
     sudo chown -R $USER $desc_dir
 
-    bcount6=$(tcpdump -en -r $t1sw1p6_pcap | wc -l) 2>/dev/null
-    bcount50=$(tcpdump -en -r $t2sw1p50_pcap | wc -l) 2>/dev/null
-    bcount52=$(tcpdump -en -r $t2sw1p52_pcap | wc -l) 2>/dev/null
-    bcount_total=$((bcount50 + bcount52))
-    echo $desc pcap count is $bcount6 $bcount50 $bcount52 $bcount_total
-    echo pcap sane $((bcount6 > 0)) $((bcount6 < 180)) \
-         $((bcount_total > 100)) $((bcount_total < 220)) | tee -a $TEST_RESULTS
+    pcount6=$(tcpdump -en -r $t1sw1p6_pcap | wc -l) 2>/dev/null
+    pcount50=$(tcpdump -en -r $t2sw1p50_pcap | wc -l) 2>/dev/null
+    pcount52=$(tcpdump -en -r $t2sw1p52_pcap | wc -l) 2>/dev/null
+    pcount_total=$((pcount50 + pcount52))
+    echo $desc pcap count is $pcount6 $pcount50 $pcount52 $pcount_total
+    echo pcap sane $((pcount6 > 0)) $((pcount6 < 180)) \
+         $((pcount_total > 95)) $((pcount_total < 220)) | tee -a $TEST_RESULTS
 
     bcount1e=$(tcpdump -en -r $t1sw1p28_pcap ether broadcast| wc -l) 2>/dev/null
     bcount2e=$(tcpdump -en -r $t1sw2p28_pcap ether broadcast| wc -l) 2>/dev/null
