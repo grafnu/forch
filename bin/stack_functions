@@ -228,13 +228,14 @@ function test_stack {
     sleep $cap_length
     sudo chown -R $USER $desc_dir
 
-    pcount6=$(tcpdump -en -r $t1sw1p6_pcap vlan | wc -l) 2>/dev/null
+    pcount6a=$(tcpdump -en -r $t1sw1p6_pcap vlan | wc -l) 2>/dev/null
+    pcount6i=$(tcpdump -en -r $t1sw1p6_pcap vlan and icmp | wc -l) 2>/dev/null
     pcount50=$(tcpdump -en -r $t2sw1p50_pcap vlan | wc -l) 2>/dev/null
     pcount52=$(tcpdump -en -r $t2sw1p52_pcap vlan | wc -l) 2>/dev/null
     pcount_total=$((pcount50 + pcount52))
-    echo $desc pcap count is $pcount6 $pcount50 $pcount52 $pcount_total
-    echo pcap sane $((pcount6 > 0)) $((pcount6 < 180)) \
-         $((pcount_total > 95)) $((pcount_total < 220)) | tee -a $TEST_RESULTS
+    echo $desc pcap count is $pcount6a $pcound6i $pcount50 $pcount52 $pcount_total
+    echo pcap sane $((pcount6a > 10)) $((pcount6i > 10)) $((pcount6a < 180)) \
+         $((pcount_total > 90)) $((pcount_total < 180)) | tee -a $TEST_RESULTS
 
     echo TAP-t1sw1p6-$desc
     tcpdump -en -r $t1sw1p6_pcap
