@@ -236,11 +236,15 @@ function test_stack {
     echo pcap sane $((pcount6 > 0)) $((pcount6 < 180)) \
          $((pcount_total > 95)) $((pcount_total < 220)) | tee -a $TEST_RESULTS
 
-    echo TAP-s1sw1p6-$desc
+    echo TAP-t1sw1p6-$desc
     tcpdump -en -r $t1sw1p6_pcap
-    echo TAP-s2sw1p50-$desc
+    echo TAP-t1sw1p28-$desc
+    tcpdump -en -r $t1sw1p28_pcap
+    echo TAP-t1sw2p28-$desc
+    tcpdump -en -r $t1sw2p28_pcap
+    echo TAP-t2sw1p50-$desc
     tcpdump -en -r $t2sw1p50_pcap
-    echo TAP-s2sw1p52-$desc
+    echo TAP-t2sw1p52-$desc
     tcpdump -en -r $t2sw1p52_pcap
     echo TAP-done-$desc
 
