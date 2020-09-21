@@ -93,12 +93,16 @@ class IntegrationTestBase(unittest.TestCase):
         return self._run_process_command(ping_cmd, True)
 
     def _ping_host_reap(self, process, expected=False, output=False):
+        print('phr1')
         return_code, out, err = self._reap_process_command(process)
+        print('phr2')
         unexpected = not expected if return_code else expected
+        print('phr3')
         if unexpected or output:
             logger.warning('ping with %s', str(process.args))
             logger.warning(out)
             logger.warning('Ping return code: %s\nstderr: %s', return_code, err)
+        print('phr4')
         return False if return_code else out.count('icmp_seq')
 
     def _fail_egress_link(self, alternate=False, restore=False):
