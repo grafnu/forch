@@ -90,10 +90,10 @@ class IntegrationTestBase(unittest.TestCase):
         ping_cmd = 'docker exec %s ping -c %d %s' % (container, count, host)
         return self._run_process_command(ping_cmd, True)
 
-    def _ping_host_reap(self, process, expected=False):
+    def _ping_host_reap(self, process, expected=False, output=False):
         return_code, out, err = self._reap_process_command(process)
         unexpected = not expected if return_code else expected
-        if unexpected:
+        if unexpected or output:
             logger.warning('ping with %s', str(process.args))
             logger.warning(out)
             logger.warning('Ping return code: %s\nstderr: %s', return_code, err)
