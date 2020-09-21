@@ -103,8 +103,12 @@ class IntegrationTestBase(unittest.TestCase):
             logger.warning('ping with %s', str(process.args))
             logger.warning(out)
             print('phr5')
-            logger.warning('Ping return code: %s\nstderr: %s', return_code, err)
+            msg = str(err)
             print('phr6')
+            print('msg len %d' % len(msg))
+            print('phr7')
+            logger.warning('Ping return code: %s\nstderr: %s', return_code, msg)
+            print('phr8')
         print('phr7')
         return False if return_code else out.count('time=')
 
