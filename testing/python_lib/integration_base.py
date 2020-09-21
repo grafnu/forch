@@ -99,10 +99,13 @@ class IntegrationTestBase(unittest.TestCase):
         unexpected = not expected if return_code else expected
         print('phr3')
         if unexpected or output:
+            print('phr4')
             logger.warning('ping with %s', str(process.args))
             logger.warning(out)
+            print('phr5')
             logger.warning('Ping return code: %s\nstderr: %s', return_code, err)
-        print('phr4')
+            print('phr6')
+        print('phr7')
         return False if return_code else out.count('time=')
 
     def _fail_egress_link(self, alternate=False, restore=False):
