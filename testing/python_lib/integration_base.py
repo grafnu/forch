@@ -103,7 +103,7 @@ class IntegrationTestBase(unittest.TestCase):
             logger.warning(out)
             logger.warning('Ping return code: %s\nstderr: %s', return_code, err)
         print('phr4')
-        return False if return_code else out.count('icmp_seq')
+        return False if return_code else out.count('time=')
 
     def _fail_egress_link(self, alternate=False, restore=False):
         switch = 't1sw2' if alternate else 't1sw1'
