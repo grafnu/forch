@@ -82,8 +82,10 @@ class IntegrationTestBase(unittest.TestCase):
     def _clean_stack(self):
         self._run_cmd('bin/net_clean')
 
-    def _ping_host(self, *args, **kwargs):
-        return self._ping_host_reap(self._ping_host_process(*args, **kwargs))
+    def _ping_host(self, container, host, count=1, output=False):
+        return self._ping_host_reap(
+            self._ping_host_process(container, host, count=count),
+            output=output)
 
     def _ping_host_process(self, container, host, count=1):
         logger.debug('Trying to ping %s from %s' % (host, container))
