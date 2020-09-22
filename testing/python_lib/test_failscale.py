@@ -30,6 +30,7 @@ class FailScaleConfigTest(IntegrationTestBase):
         print('c')
         ping_count = self._ping_host_reap(process, output=True)
         print('d')
+        self._run_cmd('bin/dump_logs')
         self.assertTrue(ping_count > 35 and ping_count < 55, 'disrupted ping count %s' % ping_count)
         print('e')
 
