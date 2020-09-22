@@ -7,12 +7,6 @@ import sys
 import time
 import yaml
 
-import logging
-logger = logging.getLogger()
-logger.level = logging.INFO
-stream_handler = logging.StreamHandler(sys.stdout)
-logger.addHandler(stream_handler)
-
 
 class IntegrationTestBase(unittest.TestCase):
     """Base class for integration tests"""
@@ -36,8 +30,8 @@ class IntegrationTestBase(unittest.TestCase):
     def _run_command(self, command, strict=True, capture=True):
         code, out, err = self._reap_process_command(self._run_process_command(command, capture))
         if strict and code:
-            logger.warning('stdout: \n' + out)
-            logger.warning('stderr: \n' + err)
+            print('stdout: \n' + out)
+            print('stderr: \n' + err)
             raise Exception('Command execution failed: %s' % str(command))
         return code, out, err
 
@@ -62,7 +56,7 @@ class IntegrationTestBase(unittest.TestCase):
         assert code == 0, 'Execution failed: %s' % cmd
 
     def _setup_stack(self, options=STACK_OPTIONS):
-        logger.debug("STACK_OPTIONS = %s", str(options))
+        print("STACK_OPTIONS = %s", str(options))
         stack_args = []
         stack_args.extend(['local'] if options.get('local') else [])
         devices = options.get('devices')
@@ -75,7 +69,7 @@ class IntegrationTestBase(unittest.TestCase):
         mode = options.get('mode')
         stack_args.extend([mode] if mode else [])
 
-        logger.info('setup_stack ' + ' '.join(stack_args))
+        print('setup_stack ' + ' '.join(stack_args))
         self._run_cmd('bin/setup_stack', stack_args)
         time.sleep(options.get('setup_warmup_sec'))
 
@@ -88,7 +82,7 @@ class IntegrationTestBase(unittest.TestCase):
             output=output)
 
     def _ping_host_process(self, container, host, count=1):
-        logger.debug('Trying to ping %s from %s' % (host, container))
+        print('Trying to ping %s from %s' % (host, container))
         ping_cmd = 'docker exec %s ping -c %d %s' % (container, count, host)
         return self._run_process_command(ping_cmd, True)
 
