@@ -71,7 +71,10 @@ class IntegrationTestBase(unittest.TestCase):
 
         print('setup_stack ' + ' '.join(stack_args))
         self._run_cmd('bin/setup_stack', stack_args)
-        time.sleep(options.get('setup_warmup_sec'))
+        setup_warmup_sec = options.get('setup_warmup_sec')
+        print('waiting %s' % setup_warmup_sec)
+        time.sleep(setup_warmup_sec)
+        print('thunderbirds are go!')
 
     def _clean_stack(self):
         self._run_cmd('bin/net_clean')
