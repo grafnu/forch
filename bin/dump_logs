@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo dumping inst/forch-faucet-*/faucet.log
-cat inst/forch-faucet-*/faucet.log
+echo dumping inst/forch-faucet-1/faucet.log
+cat inst/forch-faucet-1/faucet.log

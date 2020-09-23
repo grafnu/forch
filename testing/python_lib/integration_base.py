@@ -49,8 +49,8 @@ class IntegrationTestBase(unittest.TestCase):
 
     def _run_cmd(self, cmd, arglist=[]):
         """Runs cmds from forch base folder"""
-        path = os.path.dirname(os.path.abspath(__file__)) + '/../../'
-        command = [path + cmd] + arglist
+        # path = os.path.dirname(os.path.abspath(__file__)) + '/../../'
+        command = [cmd] + arglist
         code, _, _ = self._run_command(command, capture=False)
         print('return code %d: %s' % (code, cmd))
         assert code == 0, 'Execution failed: %s' % cmd
@@ -80,6 +80,7 @@ class IntegrationTestBase(unittest.TestCase):
         self._run_cmd('bin/net_clean')
 
     def _ping_host(self, container, host, count=1, output=False):
+        self._run_command('echo -n ping start && date', capture=False)
         return self._ping_host_reap(
             self._ping_host_process(container, host, count=count),
             output=output)
