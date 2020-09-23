@@ -25,7 +25,7 @@ class IntegrationTestBase(unittest.TestCase):
         self._setup_stack()
 
     def tearDown(self):
-        self._clean_stack()
+        pass
 
     def _run_command(self, command, strict=True, capture=True):
         code, out, err = self._reap_process_command(self._run_process_command(command, capture))
@@ -80,13 +80,13 @@ class IntegrationTestBase(unittest.TestCase):
         self._run_cmd('bin/net_clean')
 
     def _ping_host(self, container, host, count=1, output=False):
-        self._run_command('date -u', capture=False)
         return self._ping_host_reap(
             self._ping_host_process(container, host, count=count),
             output=output)
 
     def _ping_host_process(self, container, host, count=1):
-        print('Trying to ping %s from %s' % (host, container))
+        print('ping %s from %s' % (host, container))
+        self._run_command('date -u', capture=False)
         ping_cmd = 'docker exec %s ping -c %d %s' % (container, count, host)
         return self._run_process_command(ping_cmd, True)
 
