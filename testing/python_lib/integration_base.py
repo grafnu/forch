@@ -80,7 +80,7 @@ class IntegrationTestBase(unittest.TestCase):
         self._run_cmd('bin/net_clean')
 
     def _ping_host(self, container, host, count=1, output=False):
-        self._run_command('date', capture=False)
+        self._run_command('date -u', capture=False)
         return self._ping_host_reap(
             self._ping_host_process(container, host, count=count),
             output=output)
