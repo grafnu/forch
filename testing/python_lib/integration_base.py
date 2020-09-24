@@ -25,7 +25,7 @@ class IntegrationTestBase(unittest.TestCase):
         self._setup_stack()
 
     def tearDown(self):
-        pass
+        self._clean_stack()
 
     def _run_process_command(self, command, capture):
         command_list = command.split() if isinstance(command, str) else command
