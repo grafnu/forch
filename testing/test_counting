@@ -38,6 +38,7 @@ function test_counting {
                 change_counts[$key]=$value
                 delta=$((value - old))
                 echo t2sw$sw:$port ACL $acl: $old $value
+                # ARP will be between 1-3 hits, while ICMP should be exactly 5
                 tier=$(((delta > 0) + (delta > 3) + (delta > 4) + (delta > 5)))
                 echo $key $tier $description | tee -a $TEST_RESULTS
             done
