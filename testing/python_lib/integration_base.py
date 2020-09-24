@@ -27,14 +27,6 @@ class IntegrationTestBase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def _run_command(self, command, strict=True, capture=True):
-        code, out, err = self._reap_process_command(self._run_process_command(command, capture))
-        if strict and code:
-            print('stdout: \n' + out)
-            print('stderr: \n' + err)
-            raise Exception('Command execution failed: %s' % str(command))
-        return code, out, err
-
     def _run_process_command(self, command, capture):
         command_list = command.split() if isinstance(command, str) else command
         pipeout = subprocess.PIPE if capture else None
@@ -47,13 +39,15 @@ class IntegrationTestBase(unittest.TestCase):
         strerr = str(stderr, 'utf-8') if stderr else None
         return process.returncode, strout, strerr
 
-    def _run_cmd(self, cmd, arglist=[]):
-        """Runs cmds from forch base folder"""
-        # path = os.path.dirname(os.path.abspath(__file__)) + '/../../'
-        command = [cmd] + arglist
-        code, _, _ = self._run_command(command, capture=False)
-        print('return code %d: %s' % (code, cmd))
-        assert code == 0, 'Execution failed: %s' % cmd
+    def _run_cmd(self, cmd, arglist=None, strict=True, capture=True):
+        command = ([cmd] + arglist) if arglist else cmd
+        retcode, out, err = self._reap_process_command(self._run_process_command(command, capture))
+        if strict and retcode:
+            if capture:
+                print('stdout: \n' + out)
+                print('stderr: \n' + err)
+            raise Exception('Command execution failed: %s' % str(command))
+        return retcode, out, err
 
     def _setup_stack(self, options=STACK_OPTIONS):
         print("STACK_OPTIONS = %s", str(options))
@@ -72,9 +66,8 @@ class IntegrationTestBase(unittest.TestCase):
         print('setup_stack ' + ' '.join(stack_args))
         self._run_cmd('bin/setup_stack', stack_args)
         setup_warmup_sec = options.get('setup_warmup_sec')
-        print('waiting %s' % setup_warmup_sec)
+        print('waiting %s...' % setup_warmup_sec)
         time.sleep(setup_warmup_sec)
-        print('thunderbirds are go!')
 
     def _clean_stack(self):
         self._run_cmd('bin/net_clean')
@@ -86,34 +79,25 @@ class IntegrationTestBase(unittest.TestCase):
 
     def _ping_host_process(self, container, host, count=1):
         print('ping %s from %s' % (host, container))
-        self._run_command('date -u', capture=False)
+        self._run_cmd('date -u', capture=False)
         ping_cmd = 'docker exec %s ping -c %d %s' % (container, count, host)
         return self._run_process_command(ping_cmd, True)
 
     def _ping_host_reap(self, process, expected=False, output=False):
-        print('phr1')
         return_code, out, err = self._reap_process_command(process)
-        print('phr2')
         unexpected = not expected if return_code else expected
-        print('phr3')
         if unexpected or output:
-            print('phr4')
             print('ping with %s' % str(process.args))
-            print('phr5')
             print(out)
-            print('phr6')
             print('Ping return code: %d' % return_code)
-            print('phr7')
             print('stderr: %s' % err)
-            print('phr8')
-        print('phr9')
         return False if return_code else out.count('time=')
 
     def _fail_egress_link(self, alternate=False, restore=False):
         switch = 't1sw2' if alternate else 't1sw1'
         command = 'up' if restore else 'down'
-        self._run_command('sudo ip link set %s-eth28 %s' % (switch, command),
-                          capture=False)
+        self._run_cmd('sudo ip link set %s-eth28 %s' % (switch, command),
+                      capture=False)
 
     def _read_yaml_from_file(self, filename):
         with open(filename) as config_file:
