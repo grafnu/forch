@@ -57,9 +57,4 @@ docker exec forch-faux-4 ping -c 5 192.168.1.1 2>&1
 
 test_counting basic
 
-echo Generating more traffic...
-docker exec forch-faux-1 ping -c 5 192.168.1.3 2>&1
-
-test_counting again
-
 sudo kill $(< tcpdump.pid)
