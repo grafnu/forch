@@ -24,9 +24,13 @@ class FailScaleConfigTest(IntegrationTestBase):
         process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=60)
         time.sleep(5)
         self._fail_egress_link()
-        ping_count = self._ping_host_reap(process, output=True)
+        try:
+            ping_count = self._ping_host_reap(process, output=True)
+            self.assertTrue(ping_count > 25 and ping_count < 55, 'disrupted ping count %s' % ping_count)
+        except Exception as e:
+            self._run_cmd('bin/dump_logs')
+            raise e
         self._run_cmd('bin/dump_logs')
-        self.assertTrue(ping_count > 25 and ping_count < 55, 'disrupted ping count %s' % ping_count)
 
 
 if __name__ == '__main__':

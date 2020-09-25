@@ -17,6 +17,8 @@ class IntegrationTestBase(unittest.TestCase):
         'no-clean': True
     }
 
+    TEN_MIN_SEC = 10 * 60
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -33,7 +35,7 @@ class IntegrationTestBase(unittest.TestCase):
         return subprocess.Popen(command_list, stdout=pipeout, stderr=pipeout)
 
     def _reap_process_command(self, process):
-        process.wait()
+        process.wait(timeout=TEN_MIN_SEC)
         stdout, stderr = process.communicate()
         strout = str(stdout, 'utf-8') if stdout else None
         strerr = str(stderr, 'utf-8') if stderr else None
