@@ -25,6 +25,7 @@ class FailScaleConfigTest(IntegrationTestBase):
         time.sleep(5)
         self._fail_egress_link()
         ping_count = self._ping_host_reap(process, output=True)
+        self._run_cmd('bin/dump_logs')
         self.assertTrue(ping_count > 25 and ping_count < 55, 'disrupted ping count %s' % ping_count)
 
 
