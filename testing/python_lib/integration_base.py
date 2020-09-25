@@ -35,7 +35,7 @@ class IntegrationTestBase(unittest.TestCase):
         return subprocess.Popen(command_list, stdout=pipeout, stderr=pipeout)
 
     def _reap_process_command(self, process):
-        process.wait(timeout=TEN_MIN_SEC)
+        process.wait(timeout=self.TEN_MIN_SEC)
         stdout, stderr = process.communicate()
         strout = str(stdout, 'utf-8') if stdout else None
         strerr = str(stderr, 'utf-8') if stderr else None
