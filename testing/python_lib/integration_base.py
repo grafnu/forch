@@ -29,7 +29,7 @@ class IntegrationTestBase(unittest.TestCase):
     def tearDown(self):
         self._clean_stack()
 
-    def _run_process_command(self, command, capture):
+    def _run_process_command(self, command, capture=False):
         command_list = command.split() if isinstance(command, str) else command
         pipeout = subprocess.PIPE if capture else None
         return subprocess.Popen(command_list, stdout=pipeout, stderr=pipeout)
@@ -41,9 +41,10 @@ class IntegrationTestBase(unittest.TestCase):
         strerr = str(stderr, 'utf-8') if stderr else None
         return process.returncode, strout, strerr
 
-    def _run_cmd(self, cmd, arglist=None, strict=True, capture=True):
+    def _run_cmd(self, cmd, arglist=None, strict=True, capture=False):
         command = ([cmd] + arglist) if arglist else cmd
-        retcode, out, err = self._reap_process_command(self._run_process_command(command, capture))
+        retcode, out, err = self._reap_process_command(
+            self._run_process_command(command, capture=capture))
         if strict and retcode:
             if capture:
                 print('stdout: \n' + out)
@@ -81,9 +82,9 @@ class IntegrationTestBase(unittest.TestCase):
 
     def _ping_host_process(self, container, host, count=1):
         print('ping %s from %s' % (host, container))
-        self._run_cmd('date -u', capture=False)
+        self._run_cmd('date -u')
         ping_cmd = 'docker exec %s ping -c %d %s' % (container, count, host)
-        return self._run_process_command(ping_cmd, True)
+        return self._run_process_command(ping_cmd, capture=True)
 
     def _ping_host_reap(self, process, expected=False, output=False):
         return_code, out, err = self._reap_process_command(process)
@@ -98,8 +99,7 @@ class IntegrationTestBase(unittest.TestCase):
     def _fail_egress_link(self, alternate=False, restore=False):
         switch = 't1sw2' if alternate else 't1sw1'
         command = 'up' if restore else 'down'
-        self._run_cmd('sudo ip link set %s-eth28 %s' % (switch, command),
-                      capture=False)
+        self._run_cmd('sudo ip link set %s-eth28 %s' % (switch, command))
 
     def _read_yaml_from_file(self, filename):
         with open(filename) as config_file:
