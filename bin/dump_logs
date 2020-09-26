@@ -10,14 +10,10 @@ switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}'` 2>&1
 
 for switch in $switches; do
     echo Dump switch $switch
+    sleep 1
     sudo ovs-ofctl show $switch 2>&1
+    sleep 1
     sudo ovs-ofctl dump-flows $switch | fgrep -v n_packets=0 2>&1
 done
-
-echo Dump /var/log/openvswitch/ovs-vswitchd.log
-sudo tail -n 100 /var/log/openvswitch/ovs-vswitchd.log
-
-echo Dump ps ax -H
-ps ax -H | fgrep ovs
 
 echo Done with dump.
