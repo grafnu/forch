@@ -6,10 +6,17 @@ cat inst/forch-faucet-1/faucet.log
 echo Dump ovs-vsctl
 sudo ovs-vsctl show
 
-switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}'`
+switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}'` 2>&1
+
 for switch in $switches; do
     echo Switch dump-flows $switch
-    sudo ovs-ofctl dump-flows $switch | fgrep -v n_packets=0
+    sudo ovs-ofctl dump-flows $switch | fgrep -v n_packets=0 2>&1
 done
+
+echo Dump ovs-vsctl
+sudo ovs-vsctl show
+
+echo Dump iplink
+ip link
 
 echo Done with dump.
