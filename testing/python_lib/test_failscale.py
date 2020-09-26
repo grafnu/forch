@@ -21,12 +21,12 @@ class FailScaleConfigTest(IntegrationTestBase):
         """Test to build stack and check for connectivity"""
         self.assertEqual(10, self._ping_host('forch-faux-8', '192.168.1.0', count=10, output=True),
                          'warm-up ping count')
-        process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=60)
+        process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=40)
         time.sleep(5)
         self._fail_egress_link()
         try:
             ping_count = self._ping_host_reap(process, output=True)
-            self.assertTrue(10 < ping_count < 55, 'disrupted ping count %s' % ping_count)
+            self.assertTrue(10 < ping_count < 30, 'disrupted ping count %s' % ping_count)
         except Exception as e:
             self._run_cmd('bin/dump_logs')
             raise e
