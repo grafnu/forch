@@ -19,21 +19,11 @@ class FailScaleConfigTest(IntegrationTestBase):
 
     def test_stack_connectivity(self):
         """Test to build stack and check for connectivity"""
-        self._run_cmd('bin/dump_logs')
         self.assertEqual(10, self._ping_host('forch-faux-8', '192.168.1.0', count=10, output=True),
                          'warm-up ping count')
         process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=60)
         time.sleep(5)
-        self._run_cmd('bin/dump_logs')
         self._fail_egress_link()
-        time.sleep(10)
-        self._run_cmd('bin/dump_logs')
-        time.sleep(10)
-        self._run_cmd('bin/dump_logs')
-        time.sleep(10)
-        self._run_cmd('bin/dump_logs')
-        time.sleep(10)
-        self._run_cmd('bin/dump_logs')
         try:
             ping_count = self._ping_host_reap(process, output=True)
             self.assertTrue(10 < ping_count < 55, 'disrupted ping count %s' % ping_count)
