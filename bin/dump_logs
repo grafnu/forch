@@ -3,6 +3,9 @@
 echo Dumping inst/forch-faucet-1/faucet.log
 cat inst/forch-faucet-1/faucet.log
 
+echo Dump ovs-vsctl
+sudo ovs-vsctl show
+
 switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}'`
 for switch in $switches; do
     echo Switch dump-flows $switch
