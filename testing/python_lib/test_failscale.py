@@ -11,7 +11,7 @@ class FailScaleConfigTest(IntegrationTestBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.STACK_OPTIONS.update({
+        self.stack_options.update({
             'devices': 5,
             'switches': 9,
             'mode': 'scale'
@@ -27,7 +27,7 @@ class FailScaleConfigTest(IntegrationTestBase):
         self._fail_egress_link()
         try:
             ping_count = self._ping_host_reap(process, output=True)
-            self.assertTrue(ping_count > 25 and ping_count < 55, 'disrupted ping count %s' % ping_count)
+            self.assertTrue(10 < ping_count < 55, 'disrupted ping count %s' % ping_count)
         except Exception as e:
             self._run_cmd('bin/dump_logs')
             raise e
