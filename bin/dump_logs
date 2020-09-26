@@ -17,4 +17,7 @@ done
 echo Dump /var/log/openvswitch/ovs-vswitchd.log
 tail -100 /var/log/openvswitch/ovs-vswitchd.log
 
+echo Dump ps ax -H
+ps ax -H
+
 echo Done with dump.
