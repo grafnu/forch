@@ -19,6 +19,7 @@ class FailScaleConfigTest(IntegrationTestBase):
 
     def test_stack_connectivity(self):
         """Test to build stack and check for connectivity"""
+        self._run_cmd('bin/dump_logs')
         self.assertEqual(10, self._ping_host('forch-faux-8', '192.168.1.0', count=10, output=True),
                          'warm-up ping count')
         process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=60)
