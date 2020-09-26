@@ -23,6 +23,7 @@ class FailScaleConfigTest(IntegrationTestBase):
                          'warm-up ping count')
         process = self._ping_host_process('forch-faux-8', '192.168.1.0', count=60)
         time.sleep(5)
+        self._run_cmd('bin/dump_logs')
         self._fail_egress_link()
         try:
             ping_count = self._ping_host_reap(process, output=True)

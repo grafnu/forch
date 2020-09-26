@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo dumping inst/forch-faucet-1/faucet.log
+echo Dumping inst/forch-faucet-1/faucet.log
 cat inst/forch-faucet-1/faucet.log
 
 switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}'`
