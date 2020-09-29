@@ -152,22 +152,6 @@ fi
 tdevices=$((dcount + scount - 3))
 echo Working with $tdevices devices.
 
-rm -rf tcpdump
-mkdir tcpdump
-echo -n > tcpdump/tcpdump.pids
-function do_tcpdump {
-    sudo tcpdump -U --immediate-mode -Z root -eni $1 -w tcpdump/$1.pcap &
-    echo $! >> tcpdump/tcpdump.pids 
-}
-do_tcpdump bond
-for switch in t1sw1 t1sw2; do
-    do_tcpdump $switch-eth6
-    do_tcpdump $switch-eth28
-    for port in 9 10 11 12 13 14 15 16 17 18; do
-        do_tcpdump $switch-eth$port
-    done
-done
-
 echo Letting system settle...
 sleep 10
 
@@ -203,5 +187,24 @@ if [ -z "$skip_conn_check" ]; then
         done
     fi
 fi
+
+echo Launching tcpdumps...
+rm -rf tcpdump
+mkdir tcpdump
+echo -n > tcpdump/tcpdump.pids
+function do_tcpdump {
+    sudo tcpdump -U --immediate-mode -Z root -eni $1 -w tcpdump/$1.pcap 2>&! &
+    echo $! >> tcpdump/tcpdump.pids
+}
+do_tcpdump bond
+for switch in t1sw1 t1sw2; do
+    do_tcpdump $switch-eth6
+    do_tcpdump $switch-eth28
+    for port in 9 10 11 12 13 14 15 16 17 18; do
+        do_tcpdump $switch-eth$port
+    done
+done
+
+sleep 2
 
 echo Done with stack setup mode $mode.
