@@ -97,9 +97,6 @@ sudo ip link set corp-eth10 master bond
 sudo ip link set corp-eth20 master bond
 add_iface corp 10 bond
 
-sudo tcpdump -U --immediate-mode -Z root -eni bond -w bond.pcap &
-echo $! > bond.pid
-
 echo Starting faucet instances...
 sudo rm -rf inst/
 mkdir -p inst/forch-faucet-corp/faucet
@@ -154,6 +151,22 @@ fi
 
 tdevices=$((dcount + scount - 3))
 echo Working with $tdevices devices.
+
+rm -rf tcpdump
+mkdir tcpdump
+echo -n > tcpdump/tcpdump.pids
+function do_tcpdump {
+    sudo tcpdump -U --immediate-mode -Z root -eni $1 -w tcpdump/$1.pcap &
+    echo $! >> tcpdump/tcpdump.pids 
+}
+do_tcpdump bond
+for switch in t1sw1 t1sw2; do
+    do_tcpdump $switch-eth6
+    do_tcpdump $switch-eth28
+    for port in 9 10 11 12 13 14 15 16 17 18; do
+        do_tcpdump $switch-eth$port
+    done
+done
 
 echo Letting system settle...
 sleep 10
