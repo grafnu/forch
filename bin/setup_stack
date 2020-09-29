@@ -46,6 +46,11 @@ if [ "$1" == "fot" ]; then
     shift
 fi
 
+if [ "$1" == "tcpdump" ]; then
+    dumptcp=y
+    shift
+fi
+
 if [ -n "$1" ]; then
     mode=$1
     shift
@@ -197,13 +202,15 @@ function do_tcpdump {
     echo $! >> tcpdump/tcpdump.pids
 }
 do_tcpdump bond
-for switch in t1sw1 t1sw2; do
-    do_tcpdump $switch-eth6
-    do_tcpdump $switch-eth28
-    for port in 9 10 11 12 13 14 15 16 17 18; do
-        do_tcpdump $switch-eth$port
+if [ -n "$dumptcp" ]; then
+    for switch in t1sw1 t1sw2; do
+        do_tcpdump $switch-eth6
+        do_tcpdump $switch-eth28
+        for port in 9 10 11 12 13 14 15 16 17 18; do
+            do_tcpdump $switch-eth$port
+        done
     done
-done
+fi
 
 sleep 2
 

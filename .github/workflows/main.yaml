@@ -102,7 +102,7 @@ jobs:
       - name: build docker
         run: bin/retry_cmd bin/build_docker
       - name: setup stack
-        run: bin/setup_stack local dhcp
+        run: bin/setup_stack local dhcp dumptcp
       - name: run test
         run: bin/run_test_set stack
       - name: post-run logs
