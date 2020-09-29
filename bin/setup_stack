@@ -97,6 +97,9 @@ sudo ip link set corp-eth10 master bond
 sudo ip link set corp-eth20 master bond
 add_iface corp 10 bond
 
+sudo tcpdump -U --immediate-mode -Z root -eni bond -w bond.pcap &
+echo $! > bond.pid
+
 echo Starting faucet instances...
 sudo rm -rf inst/
 mkdir -p inst/forch-faucet-corp/faucet

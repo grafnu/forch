@@ -12,8 +12,7 @@ else
     tail -n 100 inst/forch-faucet-1/faucet.log
 fi
 
-echo Dump ovs-vsctl
-sudo ovs-vsctl show 2>&1
+ip link | fgrep sw
 
 switches=`sudo ovs-vsctl show | fgrep Bridge | awk '{print $2}' | sort` 2>&1
 
@@ -21,5 +20,12 @@ for switch in $switches; do
     echo Dump switch $switch
     sudo ovs-ofctl dump-flows $switch | fgrep -v n_packets=0 2>&1
 done
+
+echo Dump bond tcpdump
+if [ -n "$FULL" ]; then
+    tcpdump -en -r bond.pcap
+else
+    tcpdump -en -r bond.pcap | head -n 100
+fi
 
 echo Done with dump.
