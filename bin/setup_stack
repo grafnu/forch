@@ -193,7 +193,7 @@ rm -rf tcpdump
 mkdir tcpdump
 echo -n > tcpdump/tcpdump.pids
 function do_tcpdump {
-    sudo tcpdump -U --immediate-mode -Z root -eni $1 -w tcpdump/$1.pcap 2>&! &
+    sudo tcpdump -U --immediate-mode -Z root -eni $1 -w tcpdump/$1.pcap 2>&1 &
     echo $! >> tcpdump/tcpdump.pids
 }
 do_tcpdump bond
