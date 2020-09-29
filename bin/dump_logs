@@ -1,7 +1,16 @@
 #!/bin/bash
 
+if [ "$1" == full ]; then
+    FULL=y
+    shift
+fi
+
 echo Dumping inst/forch-faucet-1/faucet.log
-tail -n 100 inst/forch-faucet-1/faucet.log
+if [ -n "$FULL" ]; then
+    cat inst/forch-faucet-1/faucet.log
+else
+    tail -n 100 inst/forch-faucet-1/faucet.log
+fi
 
 echo Dump ovs-vsctl
 sudo ovs-vsctl show 2>&1

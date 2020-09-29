@@ -105,10 +105,13 @@ jobs:
         run: bin/setup_stack local dhcp
       - name: run test
         run: bin/run_test_set stack
+      - name: post-run logs
+        if: ${{ always() }}
+        run: bin/dump_logs full
 
   test_scale:
     runs-on: ubuntu-20.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - name: Set up python 3.8
@@ -125,4 +128,4 @@ jobs:
         run: testing/python_test test_failscale
       - name: post-run logs
         if: ${{ always() }}
-        run: bin/dump_logs
+        run: bin/dump_logs full
