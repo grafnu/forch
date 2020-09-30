@@ -46,7 +46,7 @@ if [ "$1" == "fot" ]; then
     shift
 fi
 
-if [ "$1" == "tcpdump" ]; then
+if [ "$1" == "dumptcp" ]; then
     dumptcp=y
     shift
 fi
