@@ -105,7 +105,7 @@ null
 1
 "healthy"
 "healthy"
-"sleep 50.3231"
+"sleep 70.3231"
 3
 5
 @list_hosts-healthy
@@ -195,7 +195,7 @@ null
 2
 "healthy"
 "healthy"
-"sleep 50.3231"
+"sleep 70.3231"
 3
 4
 @list_hosts-twod

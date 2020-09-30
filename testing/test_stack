@@ -79,7 +79,7 @@ sudo ip addr add 240.0.0.1/24 dev lo
 sudo ip addr add 240.0.0.2/24 dev lo
 sudo ip addr add 240.0.0.253/24 dev lo
 sudo ip link set t1sw2-eth28 up
-sleep 50.3231 &
+sleep 70.3231 &
 sleep $SETTLE_SEC
 test_forch -healthy
 test_varz_value process_state{process=\"faucet\"} 8302
@@ -100,7 +100,7 @@ test_stack -linkd
 echo %%% t1sw1-eth10 down | tee -a $TEST_RESULTS
 sudo ip link set t1sw2-eth10 down
 test_stack -twod
-sleep 50.3231 &
+sleep 70.3231 &
 sleep $SETTLE_SEC
 test_forch -twod
 
