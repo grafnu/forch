@@ -529,8 +529,9 @@ class Forchestrator:
             summary, detail = self._get_combined_summary(summaries)
             system_state.system_state = summary
             system_state.system_state_detail = detail
-            LOGGER.info('system_state_change_count sources: %s', change_counts)
-            system_state.system_state_change_count = sum(change_counts)
+            change_sum = sum(change_counts)
+            LOGGER.info('system_state_change_count sources: %d = %s', change_sum, change_counts)
+            system_state.system_state_change_count = change_sum
             system_state.system_state_last_change = max(last_changes)
             system_state.system_state_last_update = max(last_updates)
         except Exception as e:

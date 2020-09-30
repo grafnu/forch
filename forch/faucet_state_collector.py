@@ -1191,6 +1191,10 @@ class FaucetStateCollector:
         with self.lock:
             links_state = self.topo_state.setdefault(LINKS_STATE, {})
             port_state = links_state.setdefault(dp_name, {}).setdefault(port, {})
+            if new_state == 1:
+                LOGGER.info('stack_state_links ignoring %s:%d is now %s',
+                            dp_name, port, new_state)
+                return
             if port_state.get('state') != new_state:
                 port_state['state'] = new_state
                 link_change_count = self._update_stack_links_stats(timestamp)
