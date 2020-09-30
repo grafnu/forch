@@ -158,7 +158,7 @@ tdevices=$((dcount + scount - 3))
 echo Working with $tdevices devices.
 
 echo Letting system settle...
-sleep 10
+sleep 60
 
 if [ -n "$fot" ]; then
     echo head of forch-controller-1/faucet.log:
