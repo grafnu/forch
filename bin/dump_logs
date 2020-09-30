@@ -28,4 +28,7 @@ else
     tcpdump -en -r bond.pcap | head -n 100
 fi
 
+echo Dump tcpdump captures
+ls -l tcpdump/
+
 echo Done with dump.
