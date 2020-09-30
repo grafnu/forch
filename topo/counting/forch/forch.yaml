@@ -33,4 +33,4 @@ process:
     forch:
       regex: "python3 -m forch"
     sleep:
-      regex: "sleep 50\\.3231"
+      regex: "sleep 70\\.3231"
