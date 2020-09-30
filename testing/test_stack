@@ -69,76 +69,16 @@ echo %%% initial solid state | tee -a $TEST_RESULTS
 test_stack -solid
 test_forch -solid
 
-echo %%% healthy state | tee -a $TEST_RESULTS
-sudo ip addr add 240.0.0.1/24 dev lo
-sudo ip addr add 240.0.0.2/24 dev lo
-sudo ip addr add 240.0.0.253/24 dev lo
-sudo ip link set t1sw2-eth28 up
-sleep 50.3231 &
-sleep 32
-test_forch -healthy
-test_varz_value process_state{process=\"faucet\"} 8302
-test_varz_value process_state{process=\"gauge\"} 8080 forch
-test_varz_value process_state{process=\"forch\"} 8080 forch
-test_varz_value process_state{process=\"sleep\"} 8080 forch
-test_varz_value process_state{process=\"sleep\"} 8080 jkdhfgjksdhg
-
-reset_stack
-
-echo %%% t2sw3 down, cpn nz-kiwi-ctl1 up, t1sw1-eth9 down | tee -a $TEST_RESULTS
-sudo ovs-vsctl del-controller t2sw3
-sudo ip addr add 240.0.0.253/24 dev lo
-sudo ip link set t1sw1-eth9 down
-test_stack -linkd
-
-echo %%% t1sw1-eth10 down | tee -a $TEST_RESULTS
-sudo ip link set t1sw2-eth10 down
-test_stack -twod
-sleep 50.3231 &
-sleep 32
-test_forch -twod
-
-echo %%% steady state ip address check | tee -a $TEST_RESULTS
-api_result=$OUT_DIR/forch-twod/host_path2.json
-jq .src_ip $api_result | tee -a $TEST_RESULTS
-jq .dst_ip $api_result | tee -a $TEST_RESULTS
-
-echo %%% t2sw3 up, cpn nz-kiwi-t2sw2 up, t1sw1-eth6 down, t1sw1-eth11 down | tee -a $TEST_RESULTS
-sudo ovs-vsctl set-controller t2sw3 $controllers
-sudo ip addr add 240.0.0.1/24 dev lo
-sudo ip link set t1sw2-eth28 down
-sudo ip link set t1sw1-eth6 down
-sudo ip link set t1sw1-eth11 down
-test_stack -broken
-test_forch -broken
-
-echo %%% cpn t2sw2 down, t1sw1:10 down, t1sw2:10 up, t1sw1:6 up, t2sw3 swapped | tee -a $TEST_RESULTS
-sudo ip addr add 240.0.0.2/24 dev lo
-sudo ip link set t1sw1-eth10 down
-sudo ip link set t1sw2-eth10 up
-sudo ip link set t1sw1-eth6 up
-del_link t1sw1 11 t2sw3 50
-del_link t1sw2 11 t2sw3 52
-add_link t1sw1 11 t2sw3 52
-add_link t1sw2 11 t2sw3 50
-test_stack -restored
-test_forch -restored
-
 echo %%% orphaned t1sw1 | tee -a $TEST_RESULTS
 reset_stack
 sudo ip link set t1sw1-eth6 down
 sudo ip link set t1sw1-eth9 down
 sudo ip link set t1sw1-eth10 down
 sudo ip link set t1sw1-eth11 down
-
-# TODO: Make this switch roots without explicitly bringing the egress link down.
-sudo ip link set t1sw1-eth28 down
-sleep 10
-sudo ip link set t1sw1-eth28 up
-sleep 5
-
 test_stack -orphaned
 test_forch -orphaned
+
+exit 0
 
 echo %%% reset stack | tee -a $TEST_RESULTS
 restart_ovs
