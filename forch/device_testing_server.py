@@ -1,14 +1,15 @@
 """gRPC server to receive device testing result"""
 
 from concurrent import futures
-import logging
 
 import grpc
+
+from forch.utils import get_logger
 
 import forch.proto.grpc.device_testing_pb2_grpc as device_testing_pb2_grpc
 from forch.proto.shared_constants_pb2 import Empty
 
-LOGGER = logging.getLogger('dtserver')
+LOGGER = get_logger('dtserver')
 ADDRESS_DEFAULT = '0.0.0.0'
 PORT_DEFAULT = 50051
 MAX_WORKERS_DEFAULT = 10
@@ -28,10 +29,10 @@ class DeviceTestingServicer(device_testing_pb2_grpc.DeviceTestingServicer):
             LOGGER.warning('Received empty request for gRPC ReportTestingResult')
             return Empty()
 
-        self._on_receiving_result(request)
-
         LOGGER.info(
-            'Received testing state: %s, %s', request.mac, request.testing_state)
+            'Received testing state: %s, %s', request.mac, request.port_behavior)
+
+        self._on_receiving_result(request)
 
         return Empty()
 
