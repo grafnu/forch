@@ -63,7 +63,7 @@ jobs:
         run: testing/python_test test_fot
 
   test_reconfig:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
         run: bin/run_test_set reconfig
 
   test_stack:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 50
     steps:
       - uses: actions/checkout@v2
