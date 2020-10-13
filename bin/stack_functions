@@ -35,8 +35,6 @@ function add_br {
     if [ -n "$port" ]; then
         sudo ovs-vsctl set-controller $bname tcp:127.0.0.1:$port $p2cmd
     fi
-
-    sudo ovs-ofctl show $bname
 }
 
 function add_link {
@@ -148,11 +146,11 @@ function reset_stack {
     sudo ip link set t1sw2-eth11 up
     sudo ip link set t1sw1-eth28 up
 
+    # Force egress to be t1sw1
     sudo ip link set t1sw2-eth28 down
     sleep 10
-
     sudo ip link set t1sw2-eth28 up
-    sleep 2
+    sleep 10
 
     diagnose_stack
 }
