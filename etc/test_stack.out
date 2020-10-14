@@ -346,7 +346,7 @@ null
 Starting stack-orphaned test...
 (UNKNOWN) [192.168.1.1] 23 (telnet) : Connection timed out
 (UNKNOWN) [192.168.1.1] 443 (https) : Connection refused
-pcap sane 0 1 1 1
+pcap sane 0 0 1 1 1
 pcap bcast -1 1 1 1
 telnet 1 https 2
 forch-faux-0: ping -c 10 192.168.1.1 10
@@ -365,17 +365,17 @@ Done with stack-orphaned test.
 Running forch-orphaned tests
 @system_state-orphaned
 "nz-kiwi"
-258
+98
 "http://localhost.n:9020"
 "split"
 @dataplane_state-orphaned
 "broken"
 "egress: nz-kiwi-t1sw2:28; broken links: ['nz-kiwi-t1sw1:10@nz-kiwi-t2sw2:50', 'nz-kiwi-t1sw1:11@nz-kiwi-t2sw3:50', 'nz-kiwi-t1sw1:6@nz-kiwi-t1sw2:6', 'nz-kiwi-t1sw1:9@nz-kiwi-t2sw1:50']"
-174
+77
 "active"
 "down"
 @switch_state-orphaned
-73
+20
 "nz-kiwi-t1sw2"
 9
 28
@@ -383,15 +383,15 @@ Running forch-orphaned tests
 ""
 "active"
 null
-13
+4
 @cpn_state-orphaned
-6
+1
 "127.0.0.1"
 "healthy"
 "240.0.0.1"
 "down"
 @process_state-orphaned
-5
+0
 "healthy"
 "broken"
 ""
@@ -410,18 +410,18 @@ null
 Running forch-reset tests
 @system_state-reset
 "nz-kiwi"
-38
+63
 "http://localhost.n:9020"
 "split"
 @dataplane_state-reset
 "broken"
 "egress: nz-kiwi-t1sw1:28; broken links: ['nz-kiwi-t1sw1:11@nz-kiwi-t2sw3:50', 'nz-kiwi-t1sw2:11@nz-kiwi-t2sw3:52']"
-27
+43
 "active"
 "active"
-3
+9
 @switch_state-reset
-10
+20
 "nz-kiwi-t1sw1"
 9
 28
@@ -429,9 +429,9 @@ Running forch-reset tests
 ""
 "active"
 null
-2
+4
 @cpn_state-reset
-1
+0
 "127.0.0.1"
 "healthy"
 "240.0.0.1"
