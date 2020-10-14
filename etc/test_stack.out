@@ -460,8 +460,8 @@ Running forch-restart tests
 "http://localhost.n:9020"
 "split"
 @dataplane_state-restart
-"healthy"
-"egress: nz-kiwi-t1sw1:28"
+"broken"
+"egress: nz-kiwi-t1sw1:28; broken links: ['nz-kiwi-t1sw1:11@nz-kiwi-t2sw3:50', 'nz-kiwi-t1sw2:11@nz-kiwi-t2sw3:52']"
 22
 "active"
 "active"
