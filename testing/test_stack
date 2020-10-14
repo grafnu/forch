@@ -133,16 +133,17 @@ test_forch -restored
 
 echo %%% orphaned t1sw1 | tee -a $TEST_RESULTS
 reset_stack
-sudo ip link set t1sw1-eth6 down
 sudo ip link set t1sw1-eth9 down
 sudo ip link set t1sw1-eth10 down
 sudo ip link set t1sw1-eth11 down
 
 # TODO: Make this switch roots without explicitly bringing the egress link down.
 sudo ip link set t1sw1-eth28 down
-sleep 10
+sleep 15
+sudo ip link set t1sw1-eth6 down
+sleep 15
 sudo ip link set t1sw1-eth28 up
-sleep 5
+sleep 15
 
 test_stack -orphaned
 test_forch -orphaned
