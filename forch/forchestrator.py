@@ -24,7 +24,8 @@ from forch.heartbeat_scheduler import HeartbeatScheduler
 from forch.local_state_collector import LocalStateCollector
 from forch.port_state_manager import PortStateManager
 import forch.varz_state_collector as varz_state_collector
-from forch.utils import get_logger, proto_dict, yaml_proto
+from forch.utils import (
+    get_logger, proto_dict, yaml_proto, FaucetEventOrderError, MetricsFetchingError)
 
 from forch.__version__ import __version__
 
@@ -110,7 +111,7 @@ class Forchestrator:
         self._config_errors = {}
         self._faucet_config_summary = None
         self._metrics = None
-        self._proxy = None
+        self._varz_proxy = None
 
         self._lock = threading.Lock()
 
@@ -159,18 +160,23 @@ class Forchestrator:
         LOGGER.info('Using peer controller %s', self._get_peer_controller_url())
 
         if str(self._config.proxy_server):
-            self._proxy = ForchProxy(self._config.proxy_server)
-            self._proxy.start()
+            self._varz_proxy = ForchProxy(self._config.proxy_server, content_type='text/plain')
+            self._varz_proxy.start()
 
         self._validate_config_files()
 
-        while True:
+        varz_retry = 10
+        while varz_retry > 0:
             time.sleep(10)
             try:
                 self._get_varz_config()
                 break
             except Exception as e:
                 LOGGER.error('Waiting for varz config: %s', e)
+                varz_retry -= 1
+
+        if varz_retry == 0:
+            raise MetricsFetchingError('Could not get Faucet varz metrics')
 
         self._register_handlers()
         self.start()
@@ -446,7 +452,14 @@ class Forchestrator:
             while self._faucet_events:
                 while not self._faucet_events.event_socket_connected:
                     self._faucet_events_connect()
-                self._faucet_events.next_event(blocking=True)
+
+                try:
+                    self._faucet_events.next_event(blocking=True)
+                except FaucetEventOrderError as e:
+                    LOGGER.error("Faucet event order error: %s", e)
+                    if self._metrics:
+                        self._metrics.inc_var('faucet_event_out_of_sequence_count')
+                    self._restore_states()
         except KeyboardInterrupt:
             LOGGER.info('Keyboard interrupt. Exiting.')
             self._faucet_events.disconnect()
@@ -481,8 +494,8 @@ class Forchestrator:
             self._config_file_watcher.stop()
         if self._metrics:
             self._metrics.stop()
-        if self._proxy:
-            self._proxy.stop()
+        if self._varz_proxy:
+            self._varz_proxy.stop()
         if self._device_report_server:
             self._device_report_server.stop()
 
@@ -695,7 +708,9 @@ class Forchestrator:
                 is_egress = 1 if 'lacp' in if_obj else 0
                 is_stack = 1 if 'stack' in if_obj else 0
                 is_access = 1 if 'native_vlan' in if_obj else 0
-                if (is_egress + is_stack + is_access) != 1:
+                is_trunk = 1 if if_obj['description'] == 'trunk' else 0
+                is_mirror = 1 if if_obj['description'] == 'mirror' else 0
+                if (is_egress + is_stack + is_access + is_trunk + is_mirror) != 1:
                     warnings.append((if_key, 'misconfigured interface config: %d %d %d' %
                                      (is_egress, is_stack, is_access)))
                 if 'loop_protect_external' in if_obj:
