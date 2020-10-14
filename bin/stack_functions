@@ -129,6 +129,11 @@ function dump_flows {
 }
 
 function reset_stack {
+    if [ -z "$controllers" ]; then
+        echo controllers not defined, no reset for you.
+        return
+    fi
+
     sudo ovs-vsctl set-controller t2sw3 $controllers
     sudo ip addr del 240.0.0.253/24 dev lo
     sudo ip addr del 240.0.0.1/24 dev lo
