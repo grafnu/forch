@@ -374,6 +374,7 @@ Running forch-orphaned tests
 77
 "active"
 "down"
+10
 @switch_state-orphaned
 20
 "nz-kiwi-t1sw2"
@@ -410,13 +411,13 @@ null
 Running forch-reset tests
 @system_state-reset
 "nz-kiwi"
-63
+91
 "http://localhost.n:9020"
 "split"
 @dataplane_state-reset
 "broken"
 "egress: nz-kiwi-t1sw1:28; broken links: ['nz-kiwi-t1sw1:11@nz-kiwi-t2sw3:50', 'nz-kiwi-t1sw2:11@nz-kiwi-t2sw3:52']"
-43
+71
 "active"
 "active"
 9
