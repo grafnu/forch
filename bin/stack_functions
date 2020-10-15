@@ -155,7 +155,7 @@ function reset_stack {
     sudo ip link set t1sw2-eth28 down
     sleep 30
     sudo ip link set t1sw2-eth28 up
-    sleep 10
+    sleep 30
 
     diagnose_stack
 }
