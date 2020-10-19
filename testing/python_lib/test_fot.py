@@ -1,5 +1,6 @@
 """Integration test base class for Forch"""
 
+import re
 import threading
 import time
 import unittest
@@ -7,7 +8,7 @@ import yaml
 
 from forch.utils import dict_proto, proto_dict
 
-from forch.proto.devices_state_pb2 import DeviceBehavior, DevicesState
+from forch.proto.devices_state_pb2 import DeviceBehavior, DevicePlacement, DevicesState
 from forch.proto.shared_constants_pb2 import Empty
 
 from integration_base import IntegrationTestBase
@@ -146,9 +147,19 @@ class FotDeviceReportServerTestCase(DeviceReportServerTestBase):
 class FotPortStatesTestCase(PortsStateManagerTestBase):
     """Test access port states"""
 
+    def _process_device_placement(self, mac, device_placement, static=False):
+        print(f'Received device placment for device {mac}: {device_placement}, {static}')
+        self._received_device_placements.append((mac, device_placement.connected, static))
+
     def _process_device_behavior(self, mac, device_behavior, static=False):
         print(f'Received device behavior for device {mac}: {device_behavior}, {static}')
         self._received_device_behaviors.append((mac, device_behavior.segment, static))
+
+    def _get_vlan_from_segment(self, vlan):
+        segments_to_vlans = {
+            'SEG_A': 100, 'SEG_B': 200, 'SEG_C': 300, 'SEG_D': 400, 'SEG_E': 500, 'SEG_X': 600,
+        }
+        return segments_to_vlans.get(vlan)
 
     def _encapsulate_testing_result(self, mac, port_behavior):
         devices_state_map = {
@@ -167,7 +178,8 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
         authentication_results = {
             '00:0X:00:00:00:01': {'segment': 'SEG_X'},
             '00:0Z:00:00:00:03': {'segment': 'SEG_C'},
-            '00:0A:00:00:00:04': {'segment': 'SEG_D'}
+            '00:0A:00:00:00:04': {'segment': 'SEG_D'},
+            '00:0B:00:00:00:05': {'segment': 'SEG_E'}
         }
         testing_results = [
             ('00:0X:00:00:00:01', 'failed'),
@@ -176,6 +188,10 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
             ('00:0A:00:00:00:04', 'passed')
         ]
         unauthenticated_devices = ['00:0X:00:00:00:01', '00:0A:00:00:00:04']
+        expired_device_vlans = [
+            ('00:0B:00:00:00:05', 600),
+            ('00:0B:00:00:00:05', 500),
+        ]
 
         # load static device behaviors
         for mac, device_behavior_map in static_device_behaviors.items():
@@ -190,7 +206,8 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
         expected_states = {
             '00:0X:00:00:00:01': self.OPERATIONAL,
             '00:0Z:00:00:00:03': self.SEQUESTERED,
-            '00:0A:00:00:00:04': self.SEQUESTERED
+            '00:0A:00:00:00:04': self.SEQUESTERED,
+            '00:0B:00:00:00:05': self.SEQUESTERED
         }
         self._verify_ports_states(expected_states)
 
@@ -198,7 +215,8 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
             ('00:0X:00:00:00:01', 'SEG_A', True),
             ('00:0X:00:00:00:01', 'SEG_A', True),
             ('00:0Z:00:00:00:03', 'TESTING', False),
-            ('00:0A:00:00:00:04', 'TESTING', False)
+            ('00:0A:00:00:00:04', 'TESTING', False),
+            ('00:0B:00:00:00:05', 'TESTING', False)
         ]
         self._verify_received_device_behaviors(expected_received_device_behaviors)
 
@@ -210,7 +228,8 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
         expected_states = {
             '00:0X:00:00:00:01': self.OPERATIONAL,
             '00:0Z:00:00:00:03': self.INFRACTED,
-            '00:0A:00:00:00:04': self.OPERATIONAL
+            '00:0A:00:00:00:04': self.OPERATIONAL,
+            '00:0B:00:00:00:05': self.SEQUESTERED
         }
         self._verify_ports_states(expected_states)
 
@@ -223,13 +242,56 @@ class FotPortStatesTestCase(PortsStateManagerTestBase):
 
         expected_states = {
             '00:0X:00:00:00:01': self.OPERATIONAL,
-            '00:0Z:00:00:00:03': self.INFRACTED
+            '00:0Z:00:00:00:03': self.INFRACTED,
+            '00:0B:00:00:00:05': self.SEQUESTERED
         }
         self._verify_ports_states(expected_states)
 
         expected_received_device_behaviors.extend([('00:0A:00:00:00:04', '', False)])
         self._verify_received_device_behaviors(expected_received_device_behaviors)
 
+        # devices are expired
+        for expired_device_vlan in expired_device_vlans:
+            mac = expired_device_vlan[0]
+            expired_vlan = expired_device_vlan[1]
+            self._port_state_manager.handle_device_placement(
+                mac, DevicePlacement(switch='switch', port=1), False, expired_vlan)
+
+        expired_received_device_placements = [('00:0B:00:00:00:05', False, False)]
+        self._verify_received_device_placements(expired_received_device_placements)
+
+
+class FotContainerTest(IntegrationTestBase):
+    """Test suite for dynamic config changes"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.stack_options['fot'] = True
+        self.stack_options['local'] = True
+
+    def test_dhcp_reflection(self):
+        """Test to check DHCP reflection when on test VLAN"""
+        def dhclient_method(container=None):
+            def run_dhclient():
+                try:
+                    self._run_cmd('dhclient -r', docker_container=container)
+                    self._run_cmd('dhclient', docker_container=container)
+                except Exception as e:
+                    print(e)
+            return run_dhclient
+        config = self._read_faucet_config()
+        tcpdump_text = self.tcpdump_helper('faux-eth0', 'port 67 or port 68', packets=10,
+                                           funcs=[dhclient_method(container='forch-faux-1')],
+                                           timeout=10, docker_host='forch-faux-1')
+        self.assertTrue(re.search("DHCP.*Reply", tcpdump_text))
+        interface = config['dps']['nz-kiwi-t2sw1']['interfaces'][1]
+        interface['native_vlan'] = 272
+        self._write_faucet_config(config)
+        time.sleep(5)
+        tcpdump_text = self.tcpdump_helper('faux-eth0', 'port 67 or port 68', packets=10,
+                                           funcs=[dhclient_method(container='forch-faux-1')],
+                                           timeout=10, docker_host='forch-faux-1')
+        self.assertTrue(re.search("DHCP.*Reply", tcpdump_text))
 
 if __name__ == '__main__':
     unittest.main()
