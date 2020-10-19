@@ -4,11 +4,6 @@ source bin/stack_functions
 
 preamble_setup
 
-export CONTROLLER_NAME=127.0.0.1
-export STABILIZE_SEC=32
-
-controllers=`sudo ovs-vsctl get-controller t1sw1`
-
 local=
 if [ "$1" == local ]; then
     local=y
@@ -111,7 +106,7 @@ jq '.src_ips[0]' $api_result | tee -a $TEST_RESULTS
 jq '.dst_ips[0]' $api_result | tee -a $TEST_RESULTS
 
 echo %%% t2sw3 up, cpn nz-kiwi-t2sw2 up, t1sw1-eth6 down, t1sw1-eth11 down | tee -a $TEST_RESULTS
-sudo ovs-vsctl set-controller t2sw3 $controllers
+sudo ovs-vsctl set-controller t2sw3 $CONTROLLER_IDS
 sudo ip addr add 240.0.0.1/24 dev lo
 sudo ip link set t1sw2-eth28 down
 sudo ip link set t1sw1-eth6 down
