@@ -35,7 +35,7 @@ class FotConfigTest(IntegrationTestBase):
         interface['native_vlan'] = 272
         self._write_faucet_config(config)
         time.sleep(5)
-        self.assertTrue(self._ping_host('forch-faux-1', '192.168.2.1'))
+        self.assertTrue(self._ping_host('forch-faux-1', '192.168.2.1', output=True))
         self.assertFalse(self._ping_host('forch-faux-1', '192.168.1.2'))
 
 
