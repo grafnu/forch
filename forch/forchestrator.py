@@ -370,11 +370,14 @@ class Forchestrator:
 
     def _process_device_placement(self, eth_src, device_placement, static=False, expired_vlan=None):
         """Call device placement API for faucetizer/authenticator"""
-        self._port_state_manager.handle_device_placement(
+        propagate_placement = self._port_state_manager.handle_device_placement(
             eth_src, device_placement, static, expired_vlan)
 
-        if self._authenticator:
+        if self._authenticator and propagate_placement:
             self._authenticator.process_device_placement(eth_src, device_placement)
+        else:
+            LOGGER.info(
+                'Ignored vlan expiration for device %s with expired vlan %d', eth_src, expired_vlan)
 
     def handle_auth_result(self, mac, access, segment, role):
         """Method passed as callback to authenticator to forward auth results"""
@@ -716,11 +719,11 @@ class Forchestrator:
                 is_egress = 1 if 'lacp' in if_obj else 0
                 is_stack = 1 if 'stack' in if_obj else 0
                 is_access = 1 if 'native_vlan' in if_obj else 0
-                is_trunk = 1 if if_obj['description'] == 'trunk' else 0
+                is_tap = 1 if if_obj['description'] == 'tap' else 0
                 is_mirror = 1 if if_obj['description'] == 'mirror' else 0
-                if (is_egress + is_stack + is_access + is_trunk + is_mirror) != 1:
-                    warnings.append((if_key, 'misconfigured interface config: %d %d %d' %
-                                     (is_egress, is_stack, is_access)))
+                if (is_egress + is_stack + is_access + is_tap + is_mirror) != 1:
+                    warnings.append((if_key, 'misconfigured interface config: %d %d %d %d %d' %
+                                     (is_egress, is_stack, is_access, is_tap, is_mirror)))
                 if 'loop_protect_external' in if_obj:
                     warnings.append((if_key, 'deprecated loop_protect_external'))
                 if is_access and 'max_hosts' not in if_obj:
