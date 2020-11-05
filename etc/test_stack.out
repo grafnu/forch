@@ -29,7 +29,7 @@ Done with stack-solid test.
 Running forch-solid tests
 @system_state-solid
 "nz-kiwi"
-52
+53
 "http://localhost.n:9020"
 "split"
 @dataplane_state-solid
@@ -44,13 +44,13 @@ Running forch-solid tests
 "nz-kiwi-t1sw1"
 9
 28
-"147058200627"
+"1295"
 ""
 "active"
 null
 3
 @cpn_state-solid
-2
+3
 "127.0.0.1"
 "healthy"
 "240.0.0.1"
@@ -90,7 +90,7 @@ Running forch-healthy tests
 "nz-kiwi-t1sw1"
 9
 28
-"147058200627"
+"1295"
 ""
 "active"
 null
@@ -182,7 +182,7 @@ Running forch-twod tests
 "nz-kiwi-t1sw2"
 9
 6
-"147058200627"
+"1295"
 "Switches in broken state: nz-kiwi-t2sw3"
 "active"
 null
@@ -250,7 +250,7 @@ Running forch-broken tests
 null
 null
 null
-"147058200627"
+"1295"
 ""
 "active"
 null
@@ -315,7 +315,7 @@ Running forch-restored tests
 "nz-kiwi-t1sw2"
 9
 6
-"147058200627"
+"1295"
 ""
 "active"
 null
@@ -380,7 +380,7 @@ Running forch-orphaned tests
 "nz-kiwi-t1sw2"
 9
 28
-"147058200627"
+"1295"
 ""
 "active"
 null
@@ -426,7 +426,7 @@ Running forch-reset tests
 "nz-kiwi-t1sw1"
 9
 28
-"147058200627"
+"1295"
 ""
 "active"
 null
@@ -457,7 +457,7 @@ null
 Running forch-restart tests
 @system_state-restart
 "nz-kiwi"
-30
+31
 "http://localhost.n:9020"
 "split"
 @dataplane_state-restart
@@ -472,13 +472,13 @@ Running forch-restart tests
 "nz-kiwi-t1sw1"
 9
 28
-"147058200627"
+"1295"
 ""
 "active"
 null
 1
 @cpn_state-restart
-2
+3
 "127.0.0.1"
 "healthy"
 "240.0.0.1"
