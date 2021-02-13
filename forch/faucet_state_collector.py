@@ -1035,7 +1035,7 @@ class FaucetStateCollector:
                         self._placement_callback(None, device_placement)
 
             vid = port_config.get('native_vlan')
-            self._logger.info('port_state update: %s, %s, %s, %s', name, port, state, vid)
+            self._logger.info('Update port state: %s, %s, %s, %s', name, port, state, vid)
 
     def process_port_change(self, event):
         """Wrapper for process_port_state"""

@@ -18,9 +18,6 @@ YQ=venv/bin/yq
 echo Controller startup log
 docker logs forch-controller-1
 
-echo DAQ log
-cat $DAQBASE/inst/cmdrun.log
-
 echo DAQ spot checks
 
 # Basic process startup.
@@ -53,8 +50,11 @@ vlan=$($YQ '.dps."nz-kiwi-t2sw1".interfaces."1".native_vlan' $BEHAVIORAL_CONFIG)
 echo $(( (vlan > 271) + (vlan > 276) )) | tee -a $TEST_RESULTS
 echo $(( (vlan > 271) + (vlan > 276) )) | tee -a $TEST_RESULTS
 
-# Waiting for DAQ test to complete
+echo Waiting for DAQ run to complete
 monitor_log "Remaining target sets: []"
+
+echo DAQ log
+cat $DAQBASE/inst/cmdrun.log
 
 report_vlans
 
