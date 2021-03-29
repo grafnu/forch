@@ -34,11 +34,11 @@ jobs:
         if: ${{ always() }}
         run: |
           echo %%%%%%%%%%%%% base_config.json
-          cat /root/daq/resources/setups/baseline/base_config.json
+          cat inst/forch-controller-1/daq/resources/setups/baseline/base_config.json
           echo %%%%%%%%%%%%% device_config.json
-          cat /root/daq/local/site/mac_addrs/9a02571e8f01/device_config.json
+          cat inst/forch-controller-1/daq/local/site/mac_addrs/9a02571e8f01/device_config.json
           echo %%%%%%%%%%%%% module_config.json
-          cat /root/daq/local/site/mac_addrs/9a02571e8f01/aux/module_config.json
+          cat inst/forch-controller-1/daq/local/site/mac_addrs/9a02571e8f01/aux/module_config.json
           echo %%%%%%%%%%%%% Controller startup logs
           docker logs forch-controller-1
           echo %%%%%%%%%%%%% DAQ startup logs
