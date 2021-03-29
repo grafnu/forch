@@ -9,7 +9,7 @@ on:
 jobs:
   test_fot:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2
       - name: Set up python 3.8
