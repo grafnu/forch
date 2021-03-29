@@ -26,14 +26,8 @@ jobs:
           bin/setup_remote daq
       - name: build docker
         run: bin/retry_cmd bin/build_docker controller
-      - name: run python tests
-        run: testing/python_test test_fot
       - name: setup stack
         run: bin/setup_stack skip-conn-check dhcp fot
-      - name: run integration tests
-        run: bin/run_test_set fot
-      - name: setup stack
-        run: bin/setup_stack skip-conn-check dhcp fot vxlan
       - name: run integration tests
         run: bin/run_test_set fot
       - name: post-run logs
