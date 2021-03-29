@@ -90,6 +90,8 @@ else
     ifconfig data0 up
 fi
 
+cp daq/resources/setups/baseline/base_config.json daq/local/
+
 echo Starting daq, output in daq/inst/cmdrun.log
 sudo \
     PYTHONPATH=$PYTHONPATH \
