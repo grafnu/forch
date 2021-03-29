@@ -15,12 +15,6 @@ FAUCET_BASE=$INST_BASE/faucet
 BEHAVIORAL_CONFIG=$FAUCET_BASE/faucet.yaml
 YQ=venv/bin/yq
 
-echo Controller startup log
-docker logs forch-controller-1
-
-echo DAQ log
-cat $DAQBASE/inst/cmdrun.log
-
 echo DAQ spot checks
 
 # Basic process startup.
