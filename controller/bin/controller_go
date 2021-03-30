@@ -76,9 +76,6 @@ else
     ifconfig data0 up
 fi
 
-ls -l daq/inst/result.log || true
-rm -f daq/inst/result.log
-
 echo Starting daq, output in daq/inst/cmdrun.log
 sudo \
     PYTHONPATH=$PYTHONPATH \

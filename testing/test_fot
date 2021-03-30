@@ -55,9 +55,6 @@ monitor_daq_log "Remaining target sets: []"
 
 report_vlans
 
-echo TAPTAP
-ls -l $DAQBASE/inst/result.log
-cat $DAQBASE/inst/result.log
 cat $DAQBASE/inst/result.log | sort | tee -a $TEST_RESULTS
 
 docker exec forch-faux-1 ping -c 5 192.168.1.0 | fgrep "packet loss" | redact | tee -a $TEST_RESULTS
