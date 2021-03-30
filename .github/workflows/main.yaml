@@ -33,13 +33,10 @@ jobs:
       - name: post-run logs
         if: ${{ always() }}
         run: |
-          echo %%%%%%%%%%%%% module_config.json
-          cat inst/forch-controller-1/daq/local/site/mac_addrs/9a02571e8f01/aux/module_config.json || true
-          echo %%%%%%%%%%%%% device_config.json
-          cat inst/forch-controller-1/daq/local/site/mac_addrs/9a02571e8f01/device_config.json || true
-          echo %%%%%%%%%%%%% base_config.json
-          cat inst/forch-controller-1/daq/local/base_config.json || true
           echo %%%%%%%%%%%%% Controller startup logs
           docker logs forch-controller-1
           echo %%%%%%%%%%%%% DAQ startup logs
           cat inst/forch-controller-1/daq/inst/cmdrun.log
+          echo %%%%%%%%%%%%% DAQ result log
+          ls -l inst/forch-controller-1/daq/inst/result.log
+          cat inst/forch-controller-1/daq/inst/result.log
