@@ -14,6 +14,9 @@ if [[ $PVERSION != $INSTALLED_PYTHON ]]; then
     false
 fi
 
+lsb_release -a
+uname -a
+
 GO_VERSION=1.13.3
 RELEASE=$(lsb_release -is | awk '{print tolower($0)}')
 REPO=$(lsb_release -cs)
